@@ -12,4 +12,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Initialize 
+      - name: Initialize node.js project
+        run: npm init -y
+          

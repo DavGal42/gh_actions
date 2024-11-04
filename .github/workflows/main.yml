@@ -1,0 +1,10 @@
+name: print hello
+
+on: [workflow_dispatch, push]
+
+jobs:
+  runs-on: ubuntu-latest
+  print:
+    stages:
+      - name: print hello
+        run: echo Hello world

@@ -1,0 +1,46 @@
+name: Full Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: 
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        node-version: [ 14.x, 16.x, 18.x ]
+
+    steps:
+      - name: Checkout The Repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup NodeJS ${{ matrix.node-version }}
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache npm Dependencies
+        uses: actions/cache@v4.1.2
+        with:
+          path: ~/.npm  # Cache location for npm dependencies
+          key: npm-${{ matrix.node-version }}-${{ matrix.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ matrix.node-version }}-${{ matrix.os }}-
+            npm-${{ matrix.node-version }}-
+            npm-
+
+      - name: Run Dependencies
+        run: npm install
+
+      - name: Run Lint
+        run: npm run lint
+
+      - name: Run Tests
+        run: npm install
